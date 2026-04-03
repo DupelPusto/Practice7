@@ -1,57 +1,75 @@
+import exceptions.*;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        MyVector vector = new MyVector();
+        MyVector vector = null;
 
-        System.out.println("Enter first tail el:");
-        int first = s.nextInt();
-        vector.addToTail(first);
-        System.out.println(vector);
+        try {
+            System.out.println("Спроба створення з відємним capacity");
+            vector = new MyVector(-5);
+        } catch (InvalidCapacityException e) {
+            System.out.println("ПОМИЛКА: " + e.getMessage());
+            vector = new MyVector();
+            System.out.println("Створено вектор зі стандартним capacity");
+        }
 
+
+        try {
+            System.out.println("\nСпроба додати null");
+            vector.addToTail(null);
+        } catch (NullElementException e) {
+            System.out.println("ПОМИЛКА: " + e.getMessage());
+        }
+
+        System.out.println("\nEnter first tail el:");
+        vector.addToTail(s.nextInt());
         System.out.println("Enter second tail el:");
-        int second = s.nextInt();
-        vector.addToTail(second);
-        System.out.println(vector);
-
-        System.out.println("Enter third head el:");
-        int third = s.nextInt();
-        vector.addToHead(third);
-        System.out.println(vector);
-
-        System.out.println("Enter fourth head el:");
-        int fourth = s.nextInt();
-        vector.addToHead(fourth);
+        vector.addToTail(s.nextInt());
         System.out.println(vector);
 
         System.out.println("Enter element index to add:");
         int index = s.nextInt();
         System.out.println("Enter element to add:");
         int element = s.nextInt();
-        vector.addOnIndex(index, element);
-        System.out.println(vector);
+
+        try {
+            vector.addOnIndex(index, element);
+            System.out.println(vector);
+        } catch (InvalidIndexException e) {
+            System.out.println("ПОМИЛКА ДОДАВАННЯ: " + e.getMessage());
+        }
+
         System.out.println("Vector capacity: " + vector.getCapacity());
         System.out.println("Vector size: " + vector.getSize());
 
-        System.out.println("Enter index to remove element: ");
+        System.out.println("\nEnter index to remove element: ");
         int indexToRemove = s.nextInt();
-        vector.remove(indexToRemove);
-        System.out.println(vector);
+
+
+        try {
+            vector.remove(indexToRemove);
+            System.out.println(vector);
+        } catch (EmptyMyVectorException | InvalidIndexException e) {
+            System.out.println("ПОМИЛКА ВИДАЛЕННЯ: " + e.getMessage());
+        }
+
         System.out.println("Vector capacity: " + vector.getCapacity());
         System.out.println("Vector size: " + vector.getSize());
 
-        System.out.println("Enter index to get element:");
-        int indexToGet = s.nextInt();
-        System.out.println(vector.get(indexToGet));
 
         vector.clear();
-        System.out.println("Vector cleared");
-        System.out.println(vector);
-        System.out.println("Vector capacity: " + vector.getCapacity());
-        System.out.println("Vector size: " + vector.getSize());
+        System.out.println("\nVector cleared.");
 
+        try {
+            System.out.println("Спроба повторного очищення вектора");
+            vector.clear();
+        } catch (ClearException e) {
+            System.out.println("ПОМИЛКА ОЧИЩЕННЯ: " + e.getMessage());
+        }
+
+        s.close();
     }
-
-
 }

@@ -1,3 +1,5 @@
+import exceptions.*;
+
 import java.util.Arrays;
 
 public class MyVector {
@@ -10,39 +12,49 @@ public class MyVector {
         this.values = new Integer[defaultCapacity];
     }
 
-    public MyVector(int userCapacity) {
+    public MyVector(int userCapacity) throws InvalidCapacityException {
+        if (userCapacity < 0) throw new InvalidCapacityException("Розмір не може бути відємним");
         this.values = new Integer[userCapacity];
     }
 
     public void addToTail(Integer value){
+        if (value == null){
+            throw new NullElementException("Елемент не може бути null");
+        }
         checker();
-        values[size] = value;
+        values[size] = (Integer) value;
         size++;
     }
 
     public void addOnIndex(int index, Integer value){
 
-        if (index < 0 || index > size) return;
+        if (value == null) throw new NullElementException("Елемент не може бути null");
+        if (index < 0 || index > size) throw new InvalidIndexException("Невірний індекс для додавання елемента");
 
         checker();
 
         for (int i = size; i > index; i--) {
             values[i] = values[i - 1];
         }
-        values[index] = value;
+        values[index] = (Integer) value;
         size++;
     }
 
     public void clear(){
+
+        if (size == 0) throw new ClearException("ектор вже порожній");
         for (int i = 0; i < size; i++) {
             values[i] = null;
         }
         size = 0;
+        defaultCapacity = 10;
     }
 
-    public void remove(int index){
+    public void remove(int index) throws EmptyMyVectorException {
 
-        if (index < 0 || index >= size) return;
+        if (size == 0) throw new EmptyMyVectorException("Неможливо видалити елемент. Вектор порожній");
+
+        if (index < 0 || index >= size) throw new InvalidIndexException("Невірний індекс для видалення");
 
         for (int i = index; i < size - 1; i++) {
             values[i] = values[i + 1];
@@ -52,10 +64,12 @@ public class MyVector {
     }
 
     public void addToHead(int value){
-        addOnIndex(0, value);
+        addOnIndex(0, (Integer) value);
     }
 
-    public Integer get(int index){
+    public Integer get(int index) throws EmptyMyVectorException{
+        if (size == 0) throw new EmptyMyVectorException("Неможливо отримати елемент. Вектор порожній");
+        if (index < 0 || index >= size) throw new InvalidIndexException("Невірний індекс для отримання елементу");
         return values[index];
     }
 
@@ -81,10 +95,11 @@ public class MyVector {
     @Override
     public String toString() {
         String str = "Values: ";
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < size; i++) {
             if (i == values.length) str += values[i];
             str += values[i] + "; ";
         }
         return str;
     }
+
 }
