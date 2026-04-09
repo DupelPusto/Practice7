@@ -5,14 +5,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
-        MyVector vector = null;
+        MyVector<Integer> vector;
 
         try {
             System.out.println("Спроба створення з відємним capacity");
-            vector = new MyVector(-5);
+            vector = new MyVector<>(-5);
         } catch (InvalidCapacityException e) {
             System.out.println("ПОМИЛКА: " + e.getMessage());
-            vector = new MyVector();
+            vector = new MyVector<>();
             System.out.println("Створено вектор зі стандартним capacity");
         }
 
