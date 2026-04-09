@@ -2,31 +2,33 @@ import exceptions.*;
 
 import java.util.Arrays;
 
-public class MyVector {
-    private Integer[] values;
+public class MyVector<T> {
+    private T[] values;
     private int size = 0;
     private int defaultCapacity = 10;
 
 
     public MyVector() {
-        this.values = new Integer[defaultCapacity];
+        Object[] value = new Object[defaultCapacity];
+        this.values = (T[]) value;
     }
 
     public MyVector(int userCapacity) throws InvalidCapacityException {
         if (userCapacity < 0) throw new InvalidCapacityException("Розмір не може бути відємним");
-        this.values = new Integer[userCapacity];
+        Object[] value = new Object[userCapacity];
+        this.values = (T[]) value;
     }
 
-    public void addToTail(Integer value){
+    public void addToTail(T value){
         if (value == null){
             throw new NullElementException("Елемент не може бути null");
         }
         checker();
-        values[size] = (Integer) value;
+        values[size] = value;
         size++;
     }
 
-    public void addOnIndex(int index, Integer value){
+    public void addOnIndex(int index, T value){
 
         if (value == null) throw new NullElementException("Елемент не може бути null");
         if (index < 0 || index > size) throw new InvalidIndexException("Невірний індекс для додавання елемента");
@@ -36,7 +38,7 @@ public class MyVector {
         for (int i = size; i > index; i--) {
             values[i] = values[i - 1];
         }
-        values[index] = (Integer) value;
+        values[index] = value;
         size++;
     }
 
@@ -63,11 +65,11 @@ public class MyVector {
         size--;
     }
 
-    public void addToHead(int value){
-        addOnIndex(0, (Integer) value);
+    public void addToHead(T value){
+        addOnIndex(0, value);
     }
 
-    public Integer get(int index) throws EmptyMyVectorException{
+    public T get(int index) throws EmptyMyVectorException{
         if (size == 0) throw new EmptyMyVectorException("Неможливо отримати елемент. Вектор порожній");
         if (index < 0 || index >= size) throw new InvalidIndexException("Невірний індекс для отримання елементу");
         return values[index];
@@ -84,10 +86,7 @@ public class MyVector {
     private void checker(){
         if (size == values.length) {
             int newCapacity = (values.length == 0) ? 10 : values.length * 2;
-            Integer[] newValues = new Integer[newCapacity];
-            for (int i = 0; i < size; i++) {
-                newValues[i] = values[i];
-            }
+            T[] newValues = Arrays.copyOf(values, newCapacity);
             values = newValues;
         }
     }
